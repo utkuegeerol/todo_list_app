@@ -20,20 +20,28 @@ createServer({
         })
       },
     routes(){
-        this.namespace = '/api'
+        this.namespace = 'api'
 
-        this.post("/todo_list", (schema, request) => {
-            let attrs = JSON.parse(request.requestBody)
-            attrs.id = Math.floor(Math.random() * 100)
-            TodoList.push(attrs)
-            return { newRow: attrs }
-          })
-
-
-        this.get('/todo_list', ()=>{
-            return{
-                TodoList
-            }
+        this.get('/')
+     
+        this.get('/todos')
+     
+        this.get('/todos/:id')
+     
+        this.post('/todos', (schema, request) => {
+          let attrs = JSON.parse(request.requestBody)
+    
+          return schema.todos.create(attrs)
         })
+    
+        this.patch('/todos/:id', (schema, request) => {
+          let newAttrs = JSON.parse(request.requestBody)
+          let id = request.params.id
+          let todo = schema.todos.find(id)
+    
+          return todo.update(newAttrs)
+        })
+    
+        this.del('/todos/:id')
     }
 })
