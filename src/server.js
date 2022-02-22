@@ -6,7 +6,7 @@ createServer({
 
         this.get('/todo_list', ()=>{
             return{
-                todo:[
+                TodoList:[
                     {id:1, name:'Api check payment to subscriptions'},
                     {id:2, name:'go out to lunch'},
                     {id:3, name:'learn fake api'},
