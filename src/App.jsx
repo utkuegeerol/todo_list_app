@@ -7,8 +7,6 @@ import { RiDeleteBinFill } from "react-icons/ri";
 import { GrDocumentUpdate } from "react-icons/gr";
 import './App.scss';
 
-
-
 function App() {
     const [list, setTodoList] = useState(null)
 
@@ -24,9 +22,23 @@ function App() {
 
 
     useEffect(() => {
+        let list = []
         fetch('/api/todos', { method: 'GET' })
             .then((res) => res.json())
-            .then((json) => setTodoList(json.todos))
+            .then((json) => {
+
+                list = (json.todos.filter(item => {return item.checked})).map(({ id }) => id);
+
+                setCheckedId(prev => {
+                    const newCheckedId = { ...prev }
+                    newCheckedId.list = list
+                    return newCheckedId
+                })
+
+                setTodoList(json.todos)
+
+            })
+            // .then(()=>{console.log(list)})
             .catch((err) => console.log(err))
     }, [])
 
@@ -82,6 +94,7 @@ function App() {
         }
     }
 
+
     const deleteTodoFormList = async (id) => {
         try {
             await fetch(`/api/todos/${id}`, { method: 'DELETE' })
@@ -92,6 +105,7 @@ function App() {
         }
     }
 
+
     const setListToUpdate = (id) => {
         const newOne = list.find((m) => m.id === id)
         if (!newOne) return
@@ -100,6 +114,7 @@ function App() {
         setName(newOne.name)
         setChecked(newOne.checked)
     }
+
 
     return (
         <div className="container">
@@ -170,11 +185,11 @@ function App() {
                                         <td className={checkedId.list.includes(id) ? 'line-through' : ''}>{name}</td>
                                         <td className='border-1 border-start-0 text-right'>
                                             <Button
-                                                className="me-0 me-xl-3 me-lg-3 me-md-3 me-sm-3 btn_update" 
-                                                style={{color:"red"}}
+                                                className="me-0 me-xl-3 me-lg-3 me-md-3 me-sm-3 btn_update"
+                                                style={{ color: "red" }}
                                                 onClick={() => setListToUpdate(id)}
                                             >
-                                                <GrDocumentUpdate/>
+                                                <GrDocumentUpdate />
                                             </Button>
 
                                             <Button
