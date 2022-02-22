@@ -7,17 +7,49 @@ createServer({
   seeds(server) {
 
     server.create('todo', {
-      name: 'Get backups MYSQL',
+      name: 'Create simple GUI',
       checked: true,
     })
     server.create('todo', {
-      name: 'Clean cache Prod. Server',
-      checked: false,
-    })
-    server.create('todo', {
-      name: 'Learn Tailwind',
+      name: 'Create git repo.',
       checked: true,
     })
+    server.create('todo', {
+      name: 'Should be created with Create-react-app',
+      checked: true,
+    })
+
+    server.create('todo', {
+      name: 'Project should be support GET/POST actions.',
+      checked: true,
+    })
+
+    server.create('todo', {
+      name: 'Use Material-UI for React or custom components.',
+      checked: true,
+    })
+
+    server.create('todo', {
+      name: 'Use Fake Backend Provider or mocked Json file.',
+      checked: true,
+    })
+
+    server.create('todo', {
+      name: 'Support fully responsive design.',
+      checked: true,
+    })
+
+    server.create('todo', {
+      name: 'Use Sass/Scss css pre-processor.',
+      checked: true,
+    })
+
+    server.create('todo', {
+      name: 'Use CDD (Component Driven Development) approach',
+      checked: true,
+    })
+
+    
   },
   routes() {
     this.namespace = 'api'
