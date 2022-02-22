@@ -1,107 +1,141 @@
+import 'antd/lib/checkbox/style/index.css';
 import React, { useEffect, useState } from "react";
-import { Checkbox, Input, Button, form } from "antd";
+import { Form, Input, Checkbox, Button } from 'antd';
 import { RiDeleteBinFill } from "react-icons/ri";
 
 
+
 function App() {
+  const [list, setTodoList] = useState(null)
+  
+  const [listId, setListId] = useState(null)
+  
+  const [updating, setUpdating] = useState(false)
 
-    const [todo, setTodo] = useState([]);
-    const [name, setName] = useState('');
-
-    useEffect(() => {
-        fetch('/api/todo_list')
-            .then((res) => res.json())
-            .then((json) => setTodo(json.TodoList))
-            .catch((err) => console.log(err))
-    }, [])
+  const [name, setName] = useState('')
+  
+  const [checked, setChecked] = useState(0)
 
 
-    const submitForm = async (event) => {
-        event.preventDefault();
-        try {
+  useEffect(() => {
+    fetch('/api/todos',{method:'GET'})
+      .then((res) => res.json())
+      .then((json) => setTodoList(json.todos))
+      .catch((err) => console.log(err))
+  }, [])
 
-            const res = await fetch('/api/todo_list', {
-                method: 'POST',
-                body: JSON.stringify({ name })
-            })
 
-            const json = await res.json()
+  const createTodoList = async () => {
+    try {
+      const res = await fetch('/api/todos', {
+        method: 'POST',
+        body: JSON.stringify({ name, checked }),
+      })
+      const json = await res.json()
 
-            console.log(json)
-
-            setTodo([...todo, json.newRow])
-
-            setName('')
-
-        } catch (err) {
-            console.log(err)
-        }
+      setTodoList([...list, json.todo])
+      setName('')
+      setChecked(0)
+    } catch (err) {
+      console.log(err)
     }
+  }
 
 
-    return (
-        <div className="container">
+  const updateTodoList = async () => {
+    try {
+      const res = await fetch(`/api/todos/${listId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ name, checked }),
+      })
+      const json = await res.json()
 
-            <div className="row justify-content-center">
-                <div className="col">
-                    <h1 className="fw-normal my-3">
-                        ToDo List
-                    </h1>
-                    {todo.length > 0 ? <>
-                        <table className="table">
-                            <tbody className="">
+      const rowCopy = [...list]
+      const index = list.findIndex((m) => m.id === listId)
+      rowCopy[index] = json.todo
 
-                                <tr>
-                                    <td colSpan={3} className="p-3 border-bottom-1">
+      setTodoList(rowCopy)
+      setName('')
+      setChecked(0)
+      setUpdating(false)
+      setListId(null)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
-                                        <form onSubmit={submitForm}>
-                                            <div className="row">
-                                                <div className="col">
-                                                    <input
-                                                        type="text"
-                                                        className="form-control"
-                                                        placeholder="Name"
-                                                        value={name}
-                                                        onChange={(e) => setName(e.target.value)}
-                                                    />
-                                                </div>
-                                                <div className="col">
-                                                    <button type="submit" className="btn btn-success">Add</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </td>
-                                </tr>
-                                {todo.map((x, y) => <tr key={y}>
 
-                                    <td className="p-3 border-1 border-end-0">
-                                        {y}
-                                    </td>
-                                    <td className="p-3">
-                                        {x.name}
-                                    </td>
-                                    <td className="p-3 border-1 border-start-0 text-center">
-                                        <RiDeleteBinFill className="text-danger" />
-                                    </td>
+  const submitForm = async (event) => {
 
-                                </tr>)}
-                            </tbody>
+    event.preventDefault()
 
-                        </table>
+    if (updating) {
+      updateTodoList()
+    } else {
+      createTodoList()
+    }
+  }
 
-                    </> : <>
-                        <p>No List</p>
-
-                    </>
-                    }
+  return (
+    <div className="container">
+      <div className="row justify-content-center">
+        <div className="col">
+          <h1 className="fw-normal text-left my-3">ToDo List</h1>
+          <div className="my-4">
+            <form onSubmit={submitForm}>
+              <div className="row">
+                <div className="col-10">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
                 </div>
-
-
-
-            </div>
+        
+                <div className="col-2">
+                  <button type="submit" className="btn btn-success">
+                    {updating ? 'Update' : 'Add'}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+          {list?.length > 0 ? (
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>id</th>
+                  <th>name</th>
+                  <th>actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {list.map(({ id, name, checked }) => (
+                  <tr key={id}>
+                    <td>
+                        <Checkbox/>
+                    </td>
+                    <td>{name}</td>
+                    <td>
+                   
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : list ? (
+            <p>No list</p>
+          ) : (
+            <p>Loading..</p>
+          )}
         </div>
+      </div>
 
-    );
+    </div>
+
+  );
 }
 
 export default App;
