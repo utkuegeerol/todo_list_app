@@ -8,15 +8,15 @@ createServer({
 
         server.create('todo', {
           name: 'Get backups MYSQL',
-          checked: 0,
+          checked: false,
         })
         server.create('todo', {
           name: 'Clean cache Prod. Server',
-          checked: 0,
+          checked: false,
         })
         server.create('todo', {
           name: 'Learn Tailwind',
-          checked: 0,
+          checked: false,
         })
       },
     routes(){
@@ -39,6 +39,21 @@ createServer({
           let id = request.params.id
           let todo = schema.todos.find(id)
     
+          return todo.update(newAttrs)
+        })
+    
+        this.patch('/todos/checked/:id', (schema, request) => {
+
+          console.log(request.params)
+
+          let newAttrs = JSON.parse(request.requestBody)
+
+          console.log(newAttrs)
+          let id = request.params.id
+          let todo = schema.todos.find(id)
+
+          console.log(todo)
+          
           return todo.update(newAttrs)
         })
     
