@@ -1,7 +1,11 @@
 import 'antd/lib/checkbox/style/index.css';
+import 'antd/lib/input/style/index.css';
+import 'antd/lib/button/style/index.css';
 import React, { useEffect, useState } from "react";
 import { Form, Input, Checkbox, Button } from 'antd';
 import { RiDeleteBinFill } from "react-icons/ri";
+import { GrDocumentUpdate } from "react-icons/gr";
+import './App.scss';
 
 
 
@@ -100,42 +104,34 @@ function App() {
     return (
         <div className="container">
             <div className="row justify-content-center">
-                <div className="col">
+                <div className="col-xl-8 col-lg-8 col-12">
                     <h1 className="fw-normal text-left my-3">ToDo List</h1>
-                    <div className="my-4">
-                        <form onSubmit={submitForm}>
-                            <div className="row">
-                                <div className="col-10">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Name"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                    />
+                    <div className="mt-3">
+                        <Form>
+                            <div className="row ustify-content-end">
+                                <div className="col-xl-10 col-lg-10 col-md-9 col-sm-9 col-12 mb-3">
+                                    <Input size='large' placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
                                 </div>
-
-                                <div className="col-2">
-                                    <button type="submit" className="btn btn-success">
-                                        {updating ? 'Update' : 'Add'}
-                                    </button>
+                                <div className="d-xl-none d-lg-none d-md-none d-sm-none col-9"></div>
+                                <div className="col-xl-2 col-lg-2 col-md-3 col-sm-3 col-3 m">
+                                    <Button size="large" onClick={submitForm} className="w-full float-right btn_add">{updating ? 'Update' : 'Add'}</Button>
                                 </div>
                             </div>
-                        </form>
+                        </Form>
                     </div>
                     {list?.length > 0 ? (
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th>id</th>
+                                    <th>#</th>
                                     <th>name</th>
-                                    <th>actions</th>
+                                    <th className='text-right'>actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {list.map(({ id, name, checked }) => (
                                     <tr key={id}>
-                                        <td>
+                                        <td className='border-1 border-end-0'>
                                             <Checkbox defaultChecked={checked} onChange={e => {
 
                                                 let newID = [id]
@@ -148,19 +144,20 @@ function App() {
 
                                                     details = [...new Set(checkedIdList.concat(...newID))]
 
-
                                                 }
 
                                                 if (!e.target.checked && checkedIdList.includes(id)) {
+
                                                     let index = checkedIdList.indexOf(id)
 
                                                     delete checkedIdList[index]
 
-                                                    details = checkedIdList.filter(i => i != undefined)
+                                                    details = checkedIdList.filter(i => i !== undefined)
 
                                                 }
 
-                                                console.log(details)
+                                                // console.log(details)
+
                                                 setCheckedId(prev => {
                                                     const newCheckedId = { ...prev }
                                                     newCheckedId.list = details
@@ -171,20 +168,21 @@ function App() {
                                             }} />
                                         </td>
                                         <td className={checkedId.list.includes(id) ? 'line-through' : ''}>{name}</td>
-                                        <td>
-                                            <button
-                                                className="btn btn-warning me-3"
+                                        <td className='border-1 border-start-0 text-right'>
+                                            <Button
+                                                className="me-0 me-xl-3 me-lg-3 me-md-3 me-sm-3 btn_update" 
+                                                style={{color:"red"}}
                                                 onClick={() => setListToUpdate(id)}
                                             >
-                                                Update
-                                            </button>
+                                                <GrDocumentUpdate/>
+                                            </Button>
 
-                                            <button
-                                                className="btn btn-danger"
+                                            <Button
+                                                className="btn_delete"
                                                 onClick={() => deleteTodoFormList(id)}
                                             >
-                                                Delete
-                                            </button>
+                                                <RiDeleteBinFill />
+                                            </Button>
                                         </td>
                                     </tr>
                                 ))}
