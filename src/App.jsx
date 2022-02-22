@@ -76,6 +76,25 @@ function App() {
     }
   }
 
+  const deleteTodoFormList = async (id) => {
+    try {
+      await fetch(`/api/todos/${id}`, { method: 'DELETE' })
+
+      setTodoList(list.filter((m) => m.id !== id))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const setListToUpdate = (id) => {
+    const newOne = list.find((m) => m.id === id)
+    if (!newOne) return
+    setUpdating(true)
+    setListId(newOne.id)
+    setName(newOne.name)
+    setChecked(newOne.checked)
+  }
+
   return (
     <div className="container">
       <div className="row justify-content-center">
@@ -119,7 +138,19 @@ function App() {
                     </td>
                     <td>{name}</td>
                     <td>
+                      <button
+                        className="btn btn-warning me-3"
+                        onClick={() => setListToUpdate(id)}
+                      >
+                        Update
+                      </button>
                    
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => deleteTodoFormList(id)}
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
