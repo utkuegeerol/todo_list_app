@@ -1,17 +1,18 @@
 @import 'colors';
 
-.btn_update{
+.btn_update {
     border: none;
-    color:$btn_color_update;
-   
+    color: $btn_color_update;
+
 }
 
-.btn_delete{
-    border:none;
-    color:$btn_color_delete;
-}
-.btn_add{
+.btn_delete {
     border: none;
-    color:$btn_color;
-    background-color:$btn_bg_color_add;
+    color: $btn_color_delete;
+}
+
+.btn_add {
+    border: none;
+    color: $btn_color;
+    background-color: $btn_bg_color_add;
 }
