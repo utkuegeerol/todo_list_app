@@ -1,12 +1,24 @@
-import { createServer } from "miragejs";
-let TodoList = [
-    {id:1, name:'Api check payment to subscriptions'},
-    {id:2, name:'go out to lunch'},
-    {id:3, name:'learn fake api'},
-]
-
+import { createServer, Model } from 'miragejs'
 
 createServer({
+    models: {
+        todo: Model.extend({}),
+      },
+      seeds(server) {
+
+        server.create('todo', {
+          name: 'Get backups MYSQL',
+          checked: 0,
+        })
+        server.create('todo', {
+          name: 'Clean cache Prod. Server',
+          checked: 0,
+        })
+        server.create('todo', {
+          name: 'Learn Tailwind',
+          checked: 0,
+        })
+      },
     routes(){
         this.namespace = '/api'
 
